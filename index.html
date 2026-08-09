@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Concessões de Serviços Públicos - MCASP | Professor Moreira</title>
+<style>
+  :root{
+    --azul:#0b1f3a;
+    --azul2:#123b6d;
+    --azul3:#1b5ea8;
+    --vermelho:#d71920;
+    --verde:#157347;
+    --amarelo:#f7c948;
+    --cinza:#eef3f8;
+    --texto:#172033;
+    --branco:#ffffff;
+    --sombra:0 10px 30px rgba(11,31,58,.12);
+    --radius:24px;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:linear-gradient(180deg,#eaf1f8 0%,#f8fbff 100%);
+    color:var(--texto);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  .app{
+    width:100%;
+    max-width:760px;
+    margin:0 auto;
+    min-height:100vh;
+    background:#f8fbff;
+    position:relative;
+  }
+
+  .topbar{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:rgba(11,31,58,.96);
+    color:white;
+    padding:12px 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    box-shadow:0 4px 16px rgba(0,0,0,.15);
+  }
+
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+  }
+
+  .logo{
+    width:42px;height:42px;border-radius:50%;
+    background:white;color:var(--azul);
+    display:grid;place-items:center;
+    font-weight:900;font-size:18px;
+    box-shadow:inset 0 0 0 3px rgba(255,255,255,.35);
+  }
+
+  .brand-text{min-width:0}
+  .brand-text b{
+    display:block;
+    font-size:14px;
+    line-height:1.05;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .brand-text span{
+    font-size:11px;
+    opacity:.85;
+  }
+
+  .progress-wrap{
+    min-width:92px;
+    text-align:right;
+  }
+
+  .progress{
+    height:8px;
+    background:rgba(255,255,255,.2);
+    border-radius:999px;
+    overflow:hidden;
+    margin-top:4px;
+  }
+
+  .progress > div{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#ffd76a,#ffefb0);
+    transition:.25s;
+  }
+
+  .screen{
+    display:none;
+    min-height:calc(100vh - 66px);
+    padding:22px 18px 100px;
+    animation:fade .28s ease;
+  }
+
+  .screen.active{display:block}
+
+  @keyframes fade{
+    from{opacity:0;transform:translateY(8px)}
+    to{opacity:1;transform:none}
+  }
+
+  .cover{
+    padding-top:34px;
+    background:
+      radial-gradient(circle at 85% 12%, rgba(27,94,168,.15), transparent 34%),
+      radial-gradient(circle at 10% 70%, rgba(215,25,32,.08), transparent 30%);
+  }
+
+  .badge{
+    display:inline-block;
+    background:var(--vermelho);
+    color:white;
+    padding:8px 12px;
+    border-radius:999px;
+    font-weight:800;
+    font-size:13px;
+    letter-spacing:.2px;
+  }
+
+  h1{
+    color:var(--azul);
+    font-size:34px;
+    line-height:1.04;
+    margin:18px 0 14px;
+    letter-spacing:-.6px;
+  }
+
+  h2{
+    color:var(--azul);
+    font-size:28px;
+    line-height:1.08;
+    margin:4px 0 16px;
+  }
+
+  h3{
+    color:var(--azul2);
+    font-size:22px;
+    margin:18px 0 10px;
+  }
+
+  p, li{
+    font-size:20px;
+    line-height:1.5;
+  }
+
+  .lead{
+    font-size:22px;
+    line-height:1.45;
+    color:#31415a;
+  }
+
+  .card{
+    background:white;
+    border-radius:var(--radius);
+    padding:20px;
+    box-shadow:var(--sombra);
+    margin:16px 0;
+    border:1px solid #e3eaf2;
+  }
+
+  .card.dark{
+    background:linear-gradient(135deg,var(--azul),var(--azul2));
+    color:white;
+    border:0;
+  }
+
+  .card.dark h2,.card.dark h3{color:white}
+
+  .card.red{
+    border-left:8px solid var(--vermelho);
+  }
+
+  .card.green{
+    border-left:8px solid var(--verde);
+  }
+
+  .card.yellow{
+    border-left:8px solid var(--amarelo);
+  }
+
+  .mini{
+    font-size:16px;
+    color:#5b6780;
+  }
+
+  .pill{
+    display:inline-block;
+    margin:5px 6px 5px 0;
+    padding:8px 12px;
+    border-radius:999px;
+    background:#eaf2fb;
+    color:var(--azul2);
+    font-weight:800;
+    font-size:16px;
+  }
+
+  .big{
+    font-size:26px;
+    line-height:1.25;
+    font-weight:900;
+    color:var(--azul);
+  }
+
+  .formula{
+    background:#f2f7fc;
+    border:2px dashed #b6cbe0;
+    border-radius:18px;
+    padding:18px;
+    text-align:center;
+    font-size:24px;
+    font-weight:900;
+    color:var(--azul);
+    margin:16px 0;
+  }
+
+  .arrow{
+    text-align:center;
+    font-size:34px;
+    color:var(--vermelho);
+    font-weight:900;
+    line-height:1;
+    margin:10px 0;
+  }
+
+  .compare{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+
+  .compare .box{
+    background:white;
+    border-radius:22px;
+    padding:18px;
+    border:1px solid #dfe7f0;
+    box-shadow:var(--sombra);
+  }
+
+  .box h3{
+    margin-top:0;
+  }
+
+  ul{
+    padding-left:24px;
+    margin:10px 0;
+  }
+
+  .ok{color:var(--verde);font-weight:900}
+  .no{color:var(--vermelho);font-weight:900}
+
+  .remember{
+    background:#fff9da;
+    border:2px solid #f1d461;
+    border-radius:20px;
+    padding:18px;
+    font-size:20px;
+    line-height:1.45;
+    margin:18px 0;
+  }
+
+  .nav{
+    position:fixed;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:0;
+    width:min(760px,100%);
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:8px;
+    padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+    background:rgba(248,251,255,.96);
+    backdrop-filter:blur(8px);
+    border-top:1px solid #dfe7f0;
+    z-index:30;
+  }
+
+  button{
+    border:0;
+    border-radius:16px;
+    padding:15px 10px;
+    font-size:17px;
+    font-weight:900;
+    cursor:pointer;
+    min-height:54px;
+  }
+
+  .btn-prev{background:#e8edf3;color:var(--azul)}
+  .btn-home{background:var(--vermelho);color:white}
+  .btn-next{background:var(--azul);color:white}
+  button:disabled{opacity:.35;cursor:not-allowed}
+
+  .kicker{
+    font-size:14px;
+    color:var(--vermelho);
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-bottom:8px;
+  }
+
+  .section-number{
+    font-size:14px;
+    color:#62708a;
+    font-weight:800;
+  }
+
+  .table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    overflow:hidden;
+    border-radius:18px;
+    box-shadow:var(--sombra);
+    background:#fff;
+    margin:15px 0;
+  }
+  .table th,.table td{
+    padding:14px;
+    border-bottom:1px solid #e5ebf2;
+    text-align:left;
+    vertical-align:top;
+    font-size:16px;
+    line-height:1.35;
+  }
+  .table th{
+    background:var(--azul);
+    color:white;
+  }
+  .table tr:last-child td{border-bottom:0}
+
+  .quiz{
+    background:white;
+    border-radius:24px;
+    padding:20px;
+    box-shadow:var(--sombra);
+  }
+
+  .option{
+    width:100%;
+    text-align:left;
+    background:#f3f6fa;
+    color:var(--texto);
+    border:2px solid #e4eaf1;
+    margin:8px 0;
+    padding:15px;
+    border-radius:16px;
+    font-size:18px;
+    min-height:auto;
+  }
+  .option.correct{background:#e8f6ee;border-color:#7cc69c;color:#0e5a35}
+  .option.wrong{background:#fdebec;border-color:#e8a1a5;color:#8f171c}
+  .answer{
+    display:none;
+    margin-top:14px;
+    padding:15px;
+    border-radius:16px;
+    background:#eef5ff;
+    color:#263a55;
+    font-size:17px;
+    line-height:1.45;
+  }
+
+  @media(min-width:640px){
+    .screen{padding-left:28px;padding-right:28px}
+    .compare{grid-template-columns:1fr 1fr}
+    h1{font-size:42px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">PM</div>
+      <div class="brand-text">
+        <b>Professor Moreira</b>
+        <span>Contabilidade Pública • MCASP</span>
+      </div>
+    </div>
+    <div class="progress-wrap">
+      <div id="counter">1 / 35</div>
+      <div class="progress"><div id="bar"></div></div>
+    </div>
+  </header>
+
+  <main id="screens">
+
+    <section class="screen active cover">
+      <span class="badge">MCASP • 11ª EDIÇÃO</span>
+      <h1>CONCESSÕES DE SERVIÇOS PÚBLICOS</h1>
+      <p class="lead">Mapa textual em formato <b>HTML Mobile Premium</b>, dividido em muitas telas para revisão rápida e objetiva.</p>
+      <div class="card dark">
+        <h3>Conteúdo-base</h3>
+        <p>Páginas 377 a 392 — Parte III — Procedimentos Contábeis Específicos.</p>
+      </div>
+      <div class="remember"><b>Professor Moreira:</b> avance pelas telas usando a seta à direita. Não há trava inicial.</div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Visão geral</div>
+      <h2>1. O que é concessão?</h2>
+      <div class="card red">
+        <p><b>Concessão de serviço público</b> é a delegação contratual da execução do serviço público, precedida ou não de obra pública.</p>
+      </div>
+      <div class="formula">A EXECUÇÃO É DELEGADA<br>MAS A TITULARIDADE CONTINUA COM O PODER PÚBLICO</div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Base normativa</div>
+      <h2>2. Fontes usadas pelo MCASP</h2>
+      <div class="card">
+        <span class="pill">NBC TSP 05</span>
+        <span class="pill">IPSAS 32</span>
+        <span class="pill">Legislação brasileira</span>
+        <p>O capítulo disciplina os registros contábeis e orçamentários das concessões sob a ótica do <b>órgão ou entidade pública</b>.</p>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Classificação</div>
+      <h2>3. Tipos de concessão</h2>
+      <div class="formula">CONCESSÕES DE SERVIÇOS PÚBLICOS</div>
+      <div class="arrow">↓</div>
+      <div class="compare">
+        <div class="box"><h3>Concessão Comum</h3><p>Lei nº 8.987/1995</p></div>
+        <div class="box"><h3>Concessões Especiais</h3><p>PPP — Lei nº 11.079/2004</p></div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Concessões especiais</div>
+      <h2>4. PPP se divide em duas</h2>
+      <div class="formula">PPP</div>
+      <div class="arrow">↓</div>
+      <div class="compare">
+        <div class="box"><h3>Patrocinada</h3><p>Tarifa do usuário + contraprestação pública.</p></div>
+        <div class="box"><h3>Administrativa</h3><p>Contraprestação pública. Administração é usuária direta ou indireta.</p></div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Diferença-chave</div>
+      <h2>5. Concessão comum</h2>
+      <div class="card green">
+        <p><b>Não há contraprestação pecuniária do Poder Público.</b></p>
+      </div>
+      <div class="formula">USUÁRIO → TARIFA → CONCESSIONÁRIO</div>
+      <p>O concessionário é remunerado pela tarifa cobrada dos usuários.</p>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Diferença-chave</div>
+      <h2>6. PPP</h2>
+      <div class="card yellow">
+        <p>A PPP se diferencia da concessão comum especialmente por dois elementos:</p>
+      </div>
+      <div class="formula">CONTRAPRESTAÇÃO PÚBLICA<br>+<br>REPARTIÇÃO DE RISCOS</div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Definições</div>
+      <h2>7. Contrato de concessão</h2>
+      <div class="card">
+        <p>Acordo vinculante entre <b>concedente</b> e <b>concessionário</b>.</p>
+        <p>O concessionário utiliza o ativo da concessão por prazo determinado para prestar serviços públicos.</p>
+      </div>
+      <div class="formula">REMUNERAÇÃO = TARIFA E/OU CONTRAPRESTAÇÃO</div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Definições</div>
+      <h2>8. Concedente</h2>
+      <div class="card">
+        <p>Também pode ser chamado, nas PPP, de <b>parceiro público</b> ou <b>contratante</b>.</p>
+        <p>É a entidade que confere ao concessionário o direito de exploração dos serviços providos pelo ativo da concessão.</p>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Definições</div>
+      <h2>9. Concessionário</h2>
+      <div class="card">
+        <p>Também denominado <b>parceiro privado, contratado ou operador</b>.</p>
+        <p>É a pessoa jurídica ou consórcio vencedor da licitação que recebe a delegação do serviço público.</p>
+      </div>
+      <div class="remember">Nas PPP, a implantação e a gestão do objeto são realizadas por uma <b>SPE — Sociedade de Propósito Específico</b>.</div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Definições</div>
+      <h2>10. Ativo da concessão</h2>
+      <div class="card dark">
+        <p class="big" style="color:white">É o ativo necessário à prestação do serviço público objeto da concessão.</p>
+      </div>
+      <ul>
+        <li>Já existente no concessionário;</li>
+        <li>Construído pelo concessionário;</li>
+        <li>Desenvolvido pelo concessionário;</li>
+        <li>Adquirido pelo concessionário;</li>
+        <li>Benfeitoria em ativo do concedente.</li>
+      </ul>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Definições</div>
+      <h2>11. Contraprestação</h2>
+      <div class="formula">CONCEDENTE → PAGAMENTO → CONCESSIONÁRIO</div>
+      <p>É a remuneração paga pelo concedente ao concessionário.</p>
+      <div class="remember">Na PPP, a contraprestação é precedida da disponibilização do serviço.</div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Definições</div>
+      <h2>12. Aporte de recursos</h2>
+      <div class="card red">
+        <p><b>Aporte ≠ contraprestação.</b></p>
+      </div>
+      <p>O aporte é repasse destinado a:</p>
+      <ul>
+        <li>realização de obras;</li>
+        <li>aquisição de bens reversíveis.</li>
+      </ul>
+      <p>Pode ocorrer na fase de investimentos e/ou após a disponibilização dos serviços.</p>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Definições</div>
+      <h2>13. Tarifa / preço público</h2>
+      <div class="card">
+        <p>É a remuneração obtida pelo concessionário diretamente dos usuários pelos serviços prestados.</p>
+      </div>
+      <div class="formula">TARIFA NÃO É TRIBUTO</div>
+      <p>Tem natureza não tributária.</p>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Concessão comum</div>
+      <h2>14. Com ou sem obra pública</h2>
+      <p>A concessão comum pode ser:</p>
+      <div class="compare">
+        <div class="box"><h3>Serviço público</h3><p>Delegação da prestação do serviço, por conta e risco do concessionário.</p></div>
+        <div class="box"><h3>Serviço + obra pública</h3><p>O investimento é realizado pelo concessionário e recuperado pela exploração.</p></div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">PPP</div>
+      <h2>15. Concessão patrocinada</h2>
+      <div class="formula">TARIFA DOS USUÁRIOS<br>+<br>CONTRAPRESTAÇÃO DO PODER PÚBLICO</div>
+      <div class="card">
+        <p>Exemplo clássico: <b>rodovia</b> com pedágio, na qual o Poder Público também paga contraprestação ao parceiro privado.</p>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">PPP</div>
+      <h2>16. Concessão administrativa</h2>
+      <div class="formula">SOMENTE CONTRAPRESTAÇÃO DO PODER PÚBLICO</div>
+      <p>A Administração Pública é usuária direta ou indireta dos serviços.</p>
+      <div class="card">
+        <p>Exemplos: presídio, hospital, gestão de prédios públicos.</p>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Contabilização</div>
+      <h2>17. Atenção ao alcance do MCASP</h2>
+      <div class="card red">
+        <p>Nesta edição, o capítulo informa que a <b>contabilização das concessões comuns não é objeto do tratamento apresentado</b>.</p>
+      </div>
+      <p>Os procedimentos contábeis apresentados concentram-se nas <b>PPP</b>.</p>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Reconhecimento</div>
+      <h2>18. Quando reconhecer o ativo?</h2>
+      <p>Além dos requisitos gerais de reconhecimento de ativo, devem estar presentes <b>todos</b> os requisitos específicos.</p>
+      <div class="formula">CONTROLE / REGULAÇÃO<br>+<br>CONTROLE RESIDUAL OU VIDA ÚTIL</div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Reconhecimento</div>
+      <h2>19. Requisito 1 — controle ou regulação</h2>
+      <p>O concedente deve controlar ou regular:</p>
+      <div class="formula">QUAL SERVIÇO<br>PARA QUEM<br>A QUE PREÇO</div>
+      <div class="remember">Se o concedente não controla nem regula os serviços, o ativo da concessão não deve ser reconhecido por ele.</div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Reconhecimento</div>
+      <h2>20. Requisito 2 — participação residual</h2>
+      <p>O concedente deve:</p>
+      <ul>
+        <li>deter controle ou participação residual significativa no ativo ao final do contrato; <b>ou</b></li>
+        <li>o ativo deve ser utilizado durante toda a sua vida útil no contrato.</li>
+      </ul>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Reconhecimento</div>
+      <h2>21. Fluxo mental</h2>
+      <div class="formula">CONTROLA OU REGULA?</div>
+      <div class="arrow">↓</div>
+      <div class="formula">HÁ CONTROLE RESIDUAL OU USO POR TODA VIDA ÚTIL?</div>
+      <div class="arrow">↓</div>
+      <div class="card green"><p><b>SIM → RECONHECE O ATIVO DA CONCESSÃO</b></p></div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Mensuração</div>
+      <h2>22. Mensuração inicial</h2>
+      <div class="formula">VALOR JUSTO</div>
+      <p>Aplica-se tanto aos ativos existentes que tiveram aumento no potencial de serviços quanto aos ativos construídos ou desenvolvidos em função do contrato.</p>
+      <div class="remember"><b>Valor justo inicial não constitui reavaliação.</b></div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Mensuração</div>
+      <h2>23. O que entra no valor justo?</h2>
+      <div class="compare">
+        <div class="box"><h3 class="ok">ENTRA</h3><p>Valores relacionados aos investimentos.</p></div>
+        <div class="box"><h3 class="no">NÃO ENTRA</h3><p>Operação e manutenção.</p></div>
+      </div>
+      <div class="formula">INVESTIMENTO ≠ SERVIÇO</div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Segregação</div>
+      <h2>24. Obra + prestação de serviços</h2>
+      <p>A remuneração deve ser separada em componentes:</p>
+      <div class="compare">
+        <div class="box"><h3>Investimento</h3><p>Obras e equipamentos.</p></div>
+        <div class="box"><h3>Serviços</h3><p>Operação e manutenção.</p></div>
+      </div>
+      <p>Se não puderem ser identificados separadamente, utilizam-se <b>técnicas de estimativa</b>.</p>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Classificação</div>
+      <h2>25. Onde fica o ativo da concessão?</h2>
+      <div class="formula">ATIVO IMOBILIZADO</div>
+      <div class="remember"><b>Não é ativo intangível.</b></div>
+      <p>Deve ser contabilizado como <b>classe separada de ativos</b>, com segregação por natureza ou serviço similar.</p>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Mensuração subsequente</div>
+      <h2>26. Depois do reconhecimento</h2>
+      <div class="formula">DEPRECIAÇÃO<br>+<br>REAVALIAÇÃO<br>+<br>IMPAIRMENT</div>
+      <p>Quando aplicáveis, seguem o tratamento dos demais itens do ativo imobilizado.</p>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Passivo</div>
+      <h2>27. Reconhecimento do passivo</h2>
+      <div class="formula">RECONHECEU ATIVO → EM REGRA, RECONHECE PASSIVO</div>
+      <p>O passivo é mensurado inicialmente, de forma geral, pelo mesmo valor do ativo da concessão: <b>valor justo</b>.</p>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Passivo</div>
+      <h2>28. Exceção importante</h2>
+      <div class="card red">
+        <p>Se um ativo <b>preexistente do concedente</b> for apenas reclassificado como ativo da concessão, não se reconhece novo passivo.</p>
+      </div>
+      <p>Exceção da exceção: podem existir contraprestações adicionais ao concessionário.</p>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Modelos</div>
+      <h2>29. Três modelos de remuneração/passivo</h2>
+      <table class="table">
+        <tr><th>Modelo</th><th>Associação</th></tr>
+        <tr><td>Financiamento de passivos</td><td>Concessão administrativa</td></tr>
+        <tr><td>Concessão de direitos</td><td>Semelhante à concessão comum</td></tr>
+        <tr><td>Bifurcado</td><td>Concessão patrocinada</td></tr>
+      </table>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Pagamentos</div>
+      <h2>30. Separar pela essência</h2>
+      <div class="formula">ATIVO + ENCARGO FINANCEIRO + SERVIÇOS</div>
+      <p>O concedente deve separar os pagamentos ao concessionário conforme sua essência.</p>
+      <div class="remember">Encargos financeiros e contraprestação por serviços → <b>VPD</b>.</div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Aspectos orçamentários</div>
+      <h2>31. Modalidade de aplicação 67</h2>
+      <div class="card dark">
+        <p class="big" style="color:white">67 — Execução de Contratos de Parceria Público-Privada — PPP</p>
+      </div>
+      <table class="table">
+        <tr><th>Despesa</th><th>Classificação</th></tr>
+        <tr><td>Aporte para obras/bens reversíveis</td><td>4.5.67.82</td></tr>
+        <tr><td>Serviços — patrocinada</td><td>3.3.67.45</td></tr>
+        <tr><td>Serviços — administrativa</td><td>3.3.67.83</td></tr>
+        <tr><td>Incorporação de bens de capital</td><td>4.5.67.83</td></tr>
+      </table>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Riscos</div>
+      <h2>32. Principais riscos das PPP</h2>
+      <span class="pill">Demanda</span>
+      <span class="pill">Construção</span>
+      <span class="pill">Disponibilidade</span>
+      <span class="pill">Cambial</span>
+      <span class="pill">Operacional</span>
+      <div class="card">
+        <p>A PPP pressupõe <b>repartição objetiva de riscos</b> entre as partes.</p>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Provisões</div>
+      <h2>33. Quando reconhecer provisão?</h2>
+      <div class="formula">SAÍDA PROVÁVEL<br>+<br>ESTIMATIVA CONFIÁVEL</div>
+      <p>Se o risco se concretizar, reconhece-se a obrigação e baixa-se a provisão.</p>
+      <p>Se deixar de ser provável a saída de recursos, a provisão é revertida.</p>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Garantias e evidenciação</div>
+      <h2>34. Garantias + notas explicativas</h2>
+      <div class="card">
+        <p>Garantias e contragarantias são registradas em <b>contas de controle de atos potenciais</b>.</p>
+      </div>
+      <p>Em notas explicativas devem aparecer, entre outros:</p>
+      <ul>
+        <li>descrição do contrato;</li>
+        <li>cláusulas significativas;</li>
+        <li>direitos e obrigações;</li>
+        <li>ativos reconhecidos;</li>
+        <li>mudanças ocorridas no contrato.</li>
+      </ul>
+    </section>
+
+    <section class="screen">
+      <div class="kicker">Revisão final</div>
+      <h2>35. Resumo para prova</h2>
+      <div class="card dark">
+        <p><b>COMUM</b> = tarifa.</p>
+        <p><b>PATROCINADA</b> = tarifa + governo.</p>
+        <p><b>ADMINISTRATIVA</b> = governo.</p>
+        <p><b>PPP</b> = contraprestação + repartição de riscos.</p>
+        <p><b>ATIVO</b> = imobilizado.</p>
+        <p><b>MENSURAÇÃO INICIAL</b> = valor justo.</p>
+        <p><b>DEPOIS</b> = depreciação + reavaliação + impairment.</p>
+      </div>
+      <div class="remember">Toque em <b>Início</b> para revisar novamente.</div>
+    </section>
+
+  </main>
+
+  <nav class="nav">
+    <button class="btn-prev" id="prev">← Voltar</button>
+    <button class="btn-home" id="home">⌂ Início</button>
+    <button class="btn-next" id="next">Avançar →</button>
+  </nav>
+</div>
+
+<script>
+  const screens = [...document.querySelectorAll('.screen')];
+  const prev = document.getElementById('prev');
+  const next = document.getElementById('next');
+  const home = document.getElementById('home');
+  const counter = document.getElementById('counter');
+  const bar = document.getElementById('bar');
+  let i = 0;
+
+  function show(index){
+    i = Math.max(0, Math.min(index, screens.length - 1));
+    screens.forEach((s,n)=>s.classList.toggle('active',n===i));
+    counter.textContent = `${i+1} / ${screens.length}`;
+    bar.style.width = `${((i+1)/screens.length)*100}%`;
+    prev.disabled = i===0;
+    next.disabled = i===screens.length-1;
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  prev.addEventListener('click',()=>show(i-1));
+  next.addEventListener('click',()=>show(i+1));
+  home.addEventListener('click',()=>show(0));
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight') show(i+1);
+    if(e.key==='ArrowLeft') show(i-1);
+    if(e.key==='Home') show(0);
+  });
+
+  let startX=null;
+  document.addEventListener('touchstart',e=>startX=e.touches[0].clientX,{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(startX===null) return;
+    const dx=e.changedTouches[0].clientX-startX;
+    if(Math.abs(dx)>70){
+      dx<0 ? show(i+1) : show(i-1);
+    }
+    startX=null;
+  },{passive:true});
+
+  show(0);
+</script>
+</body>
+</html>
